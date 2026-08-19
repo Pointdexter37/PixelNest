@@ -5,6 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/pixnest/backend/internal/handlers"
+	"github.com/pixnest/backend/internal/repositories"
+	"github.com/pixnest/backend/internal/services"
 )
 
 type healthResponse struct {
@@ -18,6 +22,10 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	wallpaperRepository := repositories.NewMemoryWallpaperRepository()
+	wallpaperService := services.NewWallpaperService(wallpaperRepository)
+	wallpaperHandler := handlers.NewWallpaperHandler(wallpaperService)
+
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -27,6 +35,9 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(healthResponse{Status: "ok"})
 	})
+	mux.HandleFunc("GET /api/v1/wallpapers", wallpaperHandler.List)
+	mux.HandleFunc("GET /api/v1/wallpapers/{id}", wallpaperHandler.GetByID)
+	mux.HandleFunc("GET /api/v1/wallpapers/{id}/download", wallpaperHandler.Download)
 
 	server := &http.Server{
 		Addr:    ":" + port,
