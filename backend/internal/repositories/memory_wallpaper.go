@@ -67,6 +67,19 @@ func (r *MemoryWallpaperRepository) GetByID(_ context.Context, id int64) (models
 	return models.Wallpaper{}, ErrWallpaperNotFound
 }
 
+func (r *MemoryWallpaperRepository) IncrementViews(_ context.Context, id int64) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for index := range r.wallpapers {
+		if r.wallpapers[index].ID == id {
+			r.wallpapers[index].Views++
+			return nil
+		}
+	}
+	return ErrWallpaperNotFound
+}
+
 func (r *MemoryWallpaperRepository) IncrementDownloads(_ context.Context, id int64) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()

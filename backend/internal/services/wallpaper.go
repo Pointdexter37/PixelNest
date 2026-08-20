@@ -32,6 +32,10 @@ func (s *WallpaperService) GetByID(ctx context.Context, id int64) (models.Wallpa
 	return s.repository.GetByID(ctx, id)
 }
 
+func (s *WallpaperService) RecordView(ctx context.Context, id int64) error {
+	return s.repository.IncrementViews(ctx, id)
+}
+
 func (s *WallpaperService) RecordDownload(ctx context.Context, id int64) error {
 	return s.repository.IncrementDownloads(ctx, id)
 }

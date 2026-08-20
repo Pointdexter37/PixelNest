@@ -45,6 +45,14 @@ func (h *WallpaperHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := h.service.RecordView(r.Context(), id); errors.Is(err, repositories.ErrWallpaperNotFound) {
+		writeError(w, http.StatusNotFound, "wallpaper not found")
+		return
+	} else if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to record view")
+		return
+	}
+
 	wallpaper, err := h.service.GetByID(r.Context(), id)
 	if errors.Is(err, repositories.ErrWallpaperNotFound) {
 		writeError(w, http.StatusNotFound, "wallpaper not found")
@@ -73,7 +81,13 @@ func (h *WallpaperHandler) Download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	wallpaper, err := h.service.GetByID(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to get wallpaper file")
+		return
+	}
+
+	http.Redirect(w, r, wallpaper.ImageURL, http.StatusTemporaryRedirect)
 }
 
 func queryInt(r *http.Request, key string, fallback int) int {

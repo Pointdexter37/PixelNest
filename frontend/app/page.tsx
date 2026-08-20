@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const dynamic = "force-dynamic";
 
 type Wallpaper = {
@@ -43,6 +45,7 @@ export default async function HomePage() {
             />
             <h2>{wallpaper.title}</h2>
             <p>{wallpaper.description}</p>
+            <Link href={`/wallpapers/${wallpaper.id}`}>View wallpaper</Link>
           </article>
         ))}
       </section>
