@@ -513,3 +513,19 @@ Do not over-engineer the MVP. Build the simplest production-quality version firs
 ## Project Workflow
 
 Progress should be deliberate and incremental. We are moving slowly, one step at a time, and completing and reviewing each focused change before starting the next one. After every step, the user will review the implementation and read the code before additional work continues.
+
+### Incremental Change Limits
+
+- Move to the next focused step only after the current step is complete and reviewable.
+- Do not generate or modify more than 100 lines of code in a single step.
+- If a change requires more than 100 lines, split it into smaller sequential steps and pause for review between them.
+- Keep each step narrowly scoped; avoid bundling unrelated refactors or features.
+
+### Learning Focus
+
+This project is being built as a learning exercise as well as a working wallpaper platform.
+
+- Prefer clear, conventional implementations over clever or overly abstract solutions.
+- Explain important architectural decisions and non-obvious code with concise comments or documentation.
+- Keep comments focused on why the code exists, the tradeoffs involved, or how the pieces connect.
+- Introduce new tools and patterns gradually so each step can be understood and reviewed before moving on.

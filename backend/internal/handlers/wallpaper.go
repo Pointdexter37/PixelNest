@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
+	"strconv" // this converts strings to integers
 
 	"github.com/pixnest/backend/internal/repositories"
 	"github.com/pixnest/backend/internal/services"

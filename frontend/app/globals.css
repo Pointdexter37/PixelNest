@@ -16,14 +16,50 @@ body {
 main {
   display: grid;
   min-height: 100vh;
-  place-content: center;
   gap: 0.5rem;
   padding: 2rem;
   text-align: center;
 }
 
 h1,
-p {
+p,
+h2 {
   margin: 0;
 }
 
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  width: min(100%, 1000px);
+  margin-top: 1.5rem;
+}
+
+.wallpaper-card {
+  overflow: hidden;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  background: #1f2937;
+  text-align: left;
+}
+
+.wallpaper-card img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.wallpaper-card h2,
+.wallpaper-card p {
+  padding: 0 1rem;
+}
+
+.wallpaper-card h2 {
+  margin-top: 1rem;
+}
+
+.wallpaper-card p {
+  margin-bottom: 1rem;
+  color: #d1d5db;
+}
