@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"time"
 
@@ -53,6 +54,28 @@ func (r *MemoryWallpaperRepository) Count(_ context.Context) (int, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return len(r.wallpapers), nil
+}
+
+func (r *MemoryWallpaperRepository) Search(_ context.Context, query string, offset, limit int) ([]models.Wallpaper, int, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	query = strings.ToLower(strings.TrimSpace(query))
+	matches := make([]models.Wallpaper, 0)
+	for _, wallpaper := range r.wallpapers {
+		if strings.Contains(strings.ToLower(wallpaper.Title), query) ||
+			strings.Contains(strings.ToLower(wallpaper.Description), query) {
+			matches = append(matches, wallpaper)
+		}
+	}
+	if offset >= len(matches) {
+		return []models.Wallpaper{}, len(matches), nil
+	}
+	end := offset + limit
+	if end > len(matches) {
+		end = len(matches)
+	}
+	return append([]models.Wallpaper(nil), matches[offset:end]...), len(matches), nil
 }
 
 func (r *MemoryWallpaperRepository) GetByID(_ context.Context, id int64) (models.Wallpaper, error) {

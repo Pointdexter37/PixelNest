@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv" // this converts strings to integers
 
+	"github.com/pixnest/backend/internal/models"
 	"github.com/pixnest/backend/internal/repositories"
 	"github.com/pixnest/backend/internal/services"
 )
@@ -26,7 +27,15 @@ func (h *WallpaperHandler) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wallpapers, total, err := h.service.List(r.Context(), page, limit)
+	query := r.URL.Query().Get("q")
+	var wallpapers []models.Wallpaper
+	var total int
+	var err error
+	if query == "" {
+		wallpapers, total, err = h.service.List(r.Context(), page, limit)
+	} else {
+		wallpapers, total, err = h.service.Search(r.Context(), query, page, limit)
+	}
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list wallpapers")
 		return

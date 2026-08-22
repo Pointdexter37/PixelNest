@@ -12,6 +12,7 @@ var ErrWallpaperNotFound = errors.New("wallpaper not found")
 type WallpaperRepository interface {
 	List(ctx context.Context, offset, limit int) ([]models.Wallpaper, error)
 	Count(ctx context.Context) (int, error)
+	Search(ctx context.Context, query string, offset, limit int) ([]models.Wallpaper, int, error)
 	GetByID(ctx context.Context, id int64) (models.Wallpaper, error)
 	IncrementViews(ctx context.Context, id int64) error
 	IncrementDownloads(ctx context.Context, id int64) error

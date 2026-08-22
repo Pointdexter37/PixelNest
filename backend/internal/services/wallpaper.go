@@ -28,6 +28,11 @@ func (s *WallpaperService) List(ctx context.Context, page, limit int) ([]models.
 	return wallpapers, total, nil
 }
 
+func (s *WallpaperService) Search(ctx context.Context, query string, page, limit int) ([]models.Wallpaper, int, error) {
+	offset := (page - 1) * limit
+	return s.repository.Search(ctx, query, offset, limit)
+}
+
 func (s *WallpaperService) GetByID(ctx context.Context, id int64) (models.Wallpaper, error) {
 	return s.repository.GetByID(ctx, id)
 }
