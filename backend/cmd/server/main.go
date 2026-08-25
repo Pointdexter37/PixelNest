@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pixnest/backend/internal/handlers"
-	"github.com/pixnest/backend/internal/repositories"
-	"github.com/pixnest/backend/internal/services"
+	"github.com/pixelnest/backend/internal/handlers"
+	"github.com/pixelnest/backend/internal/repositories"
+	"github.com/pixelnest/backend/internal/services"
 )
 
 type healthResponse struct {
@@ -46,6 +46,6 @@ func main() {
 		Handler: mux,
 	}
 
-	log.Printf("PixNest API listening on :%s", port)
+	log.Printf("PixelNest API listening on :%s", port)
 	log.Fatal(server.ListenAndServe())
 }

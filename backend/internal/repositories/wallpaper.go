@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/pixnest/backend/internal/models"
+	"github.com/pixelnest/backend/internal/models"
 )
 
 var ErrWallpaperNotFound = errors.New("wallpaper not found")

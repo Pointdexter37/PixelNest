@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv" // this converts strings to integers
 
-	"github.com/pixnest/backend/internal/models"
-	"github.com/pixnest/backend/internal/repositories"
-	"github.com/pixnest/backend/internal/services"
+	"github.com/pixelnest/backend/internal/models"
+	"github.com/pixelnest/backend/internal/repositories"
+	"github.com/pixelnest/backend/internal/services"
 )
 
 type WallpaperHandler struct {

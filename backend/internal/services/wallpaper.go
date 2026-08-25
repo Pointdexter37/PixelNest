@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 
-	"github.com/pixnest/backend/internal/models"
-	"github.com/pixnest/backend/internal/repositories"
+	"github.com/pixelnest/backend/internal/models"
+	"github.com/pixelnest/backend/internal/repositories"
 )
 
 type WallpaperService struct {

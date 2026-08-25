@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/pixnest/backend/internal/repositories"
+	"github.com/pixelnest/backend/internal/repositories"
 )
 
 type CategoryHandler struct {

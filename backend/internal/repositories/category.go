@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/pixnest/backend/internal/models"
+	"github.com/pixelnest/backend/internal/models"
 )
 
 type CategoryRepository interface {

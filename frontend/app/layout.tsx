@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PixNest",
+  title: "PixelNest",
   description: "Discover high-quality wallpapers for your desktop.",
 };
 
@@ -18,4 +18,3 @@ export default function RootLayout({
     </html>
   );
 }
-

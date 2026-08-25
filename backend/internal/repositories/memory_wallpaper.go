@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pixnest/backend/internal/models"
+	"github.com/pixelnest/backend/internal/models"
 )
 
 type MemoryWallpaperRepository struct {

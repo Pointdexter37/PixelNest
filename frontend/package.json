@@ -1,5 +1,5 @@
 {
-  "name": "pixnest-frontend",
+  "name": "pixelnest-frontend",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,4 +19,3 @@
     "typescript": "^5"
   }
 }
-

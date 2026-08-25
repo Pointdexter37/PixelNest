@@ -1,6 +1,6 @@
-# PixNest
+# PixelNest
 
-PixNest is a wallpaper platform with a Next.js frontend and Go REST API.
+PixelNest is a wallpaper platform with a Next.js frontend and Go REST API.
 
 ## Local development
 
@@ -13,4 +13,3 @@ PixNest is a wallpaper platform with a Next.js frontend and Go REST API.
 The API health check is available at `http://localhost:8080/healthz`.
 
 Development proceeds incrementally. Each focused step should be reviewed before the next implementation step begins.
-
