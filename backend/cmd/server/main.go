@@ -25,14 +25,14 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	wallpaperRepository, closeDatabase, err := newWallpaperRepository()
+	wallpaperRepository, categoryRepository, closeDatabase, err := newRepositories()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer closeDatabase()
 	wallpaperService := services.NewWallpaperService(wallpaperRepository)
 	wallpaperHandler := handlers.NewWallpaperHandler(wallpaperService)
-	categoryHandler := handlers.NewCategoryHandler(repositories.NewMemoryCategoryRepository())
+	categoryHandler := handlers.NewCategoryHandler(categoryRepository)
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -57,19 +57,27 @@ func main() {
 	log.Fatal(server.ListenAndServe())
 }
 
-func newWallpaperRepository() (repositories.WallpaperRepository, func(), error) {
+func newRepositories() (
+	repositories.WallpaperRepository,
+	repositories.CategoryRepository,
+	func(),
+	error,
+) {
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
-		log.Println("DATABASE_URL is not set; using in-memory wallpaper data")
-		return repositories.NewMemoryWallpaperRepository(), func() {}, nil
+		log.Println("DATABASE_URL is not set; using in-memory data")
+		return repositories.NewMemoryWallpaperRepository(),
+			repositories.NewMemoryCategoryRepository(), func() {}, nil
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	db, err := database.Open(ctx, databaseURL)
 	if err != nil {
-		return nil, func() {}, err
+		return nil, nil, func() {}, err
 	}
-	log.Println("using PostgreSQL wallpaper repository")
-	return repositories.NewPostgresWallpaperRepository(db), func() { db.Close() }, nil
+	log.Println("using PostgreSQL repositories")
+	return repositories.NewPostgresWallpaperRepository(db),
+		repositories.NewPostgresCategoryRepository(db),
+		func() { db.Close() }, nil
 }
