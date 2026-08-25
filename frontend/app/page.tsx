@@ -15,9 +15,13 @@ type WallpaperResponse = {
   data: Wallpaper[];
 };
 
-async function getWallpapers(): Promise<Wallpaper[]> {
+type Category = { id: number; name: string };
+
+async function getWallpapers(query: string, categoryID: string): Promise<Wallpaper[]> {
   const apiURL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
-  const response = await fetch(`${apiURL}/api/v1/wallpapers?limit=12`);
+  const search = query ? `&q=${encodeURIComponent(query)}` : "";
+  const category = categoryID ? `&category_id=${categoryID}` : "";
+  const response = await fetch(`${apiURL}/api/v1/wallpapers?limit=12${search}${category}`);
 
   if (!response.ok) {
     throw new Error("Unable to load wallpapers");
@@ -27,13 +31,50 @@ async function getWallpapers(): Promise<Wallpaper[]> {
   return payload.data;
 }
 
-export default async function HomePage() {
-  const wallpapers = await getWallpapers();
+async function getCategories(): Promise<Category[]> {
+  const apiURL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+  const response = await fetch(`${apiURL}/api/v1/categories`);
+  if (!response.ok) throw new Error("Unable to load categories");
+  const payload: { data: Category[] } = await response.json();
+  return payload.data;
+}
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; category_id?: string }>;
+}) {
+  const params = await searchParams;
+  const query = params.q ?? "";
+  const categoryID = params.category_id ?? "";
+  const [wallpapers, categories] = await Promise.all([
+    getWallpapers(query, categoryID),
+    getCategories(),
+  ]);
 
   return (
     <main>
       <h1>PixNest</h1>
       <p>Discover high-quality wallpapers for your desktop.</p>
+      <form className="search-form" role="search">
+        <input
+          name="q"
+          type="search"
+          placeholder="Search wallpapers"
+          defaultValue={query}
+          aria-label="Search wallpapers"
+        />
+        <button type="submit">Search</button>
+        <select name="category_id" defaultValue={categoryID} aria-label="Filter by category">
+          <option value="">All categories</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </form>
+      {query && <p>Search results for &quot;{query}&quot;</p>}
       <section className="wallpaper-grid" aria-label="Latest wallpapers">
         {wallpapers.map((wallpaper) => (
           <article className="wallpaper-card" key={wallpaper.id}>

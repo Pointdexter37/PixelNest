@@ -15,9 +15,9 @@ func NewWallpaperService(repository repositories.WallpaperRepository) *Wallpaper
 	return &WallpaperService{repository: repository}
 }
 
-func (s *WallpaperService) List(ctx context.Context, page, limit int) ([]models.Wallpaper, int, error) {
+func (s *WallpaperService) List(ctx context.Context, page, limit int, categoryID *int64) ([]models.Wallpaper, int, error) {
 	offset := (page - 1) * limit
-	wallpapers, err := s.repository.List(ctx, offset, limit)
+	wallpapers, err := s.repository.List(ctx, offset, limit, categoryID)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -28,9 +28,9 @@ func (s *WallpaperService) List(ctx context.Context, page, limit int) ([]models.
 	return wallpapers, total, nil
 }
 
-func (s *WallpaperService) Search(ctx context.Context, query string, page, limit int) ([]models.Wallpaper, int, error) {
+func (s *WallpaperService) Search(ctx context.Context, query string, page, limit int, categoryID *int64) ([]models.Wallpaper, int, error) {
 	offset := (page - 1) * limit
-	return s.repository.Search(ctx, query, offset, limit)
+	return s.repository.Search(ctx, query, offset, limit, categoryID)
 }
 
 func (s *WallpaperService) GetByID(ctx context.Context, id int64) (models.Wallpaper, error) {

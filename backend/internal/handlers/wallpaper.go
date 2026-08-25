@@ -22,6 +22,7 @@ func NewWallpaperHandler(service *services.WallpaperService) *WallpaperHandler {
 func (h *WallpaperHandler) List(w http.ResponseWriter, r *http.Request) {
 	page := queryInt(r, "page", 1)
 	limit := queryInt(r, "limit", 24)
+	categoryID := queryOptionalInt64(r, "category_id")
 	if page < 1 || limit < 1 || limit > 100 {
 		writeError(w, http.StatusBadRequest, "page must be positive and limit must be between 1 and 100")
 		return
@@ -32,9 +33,9 @@ func (h *WallpaperHandler) List(w http.ResponseWriter, r *http.Request) {
 	var total int
 	var err error
 	if query == "" {
-		wallpapers, total, err = h.service.List(r.Context(), page, limit)
+		wallpapers, total, err = h.service.List(r.Context(), page, limit, categoryID)
 	} else {
-		wallpapers, total, err = h.service.Search(r.Context(), query, page, limit)
+		wallpapers, total, err = h.service.Search(r.Context(), query, page, limit, categoryID)
 	}
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to list wallpapers")
@@ -105,6 +106,14 @@ func queryInt(r *http.Request, key string, fallback int) int {
 		return fallback
 	}
 	return value
+}
+
+func queryOptionalInt64(r *http.Request, key string) *int64 {
+	value, err := strconv.ParseInt(r.URL.Query().Get(key), 10, 64)
+	if err != nil || value < 1 {
+		return nil
+	}
+	return &value
 }
 
 func writeJSON(w http.ResponseWriter, status int, payload any) {

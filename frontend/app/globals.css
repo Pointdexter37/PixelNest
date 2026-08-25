@@ -27,6 +27,28 @@ h2 {
   margin: 0;
 }
 
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.search-form input,
+.search-form button,
+.search-form select {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #4b5563;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+
+.search-form button {
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
 .wallpaper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

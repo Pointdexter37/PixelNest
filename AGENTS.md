@@ -517,8 +517,8 @@ Progress should be deliberate and incremental. We are moving slowly, one step at
 ### Incremental Change Limits
 
 - Move to the next focused step only after the current step is complete and reviewable.
-- Do not generate or modify more than 100 lines of code in a single step.
-- If a change requires more than 100 lines, split it into smaller sequential steps and pause for review between them.
+- Do not generate or modify more than 200 lines of code in a single step.
+- If a change requires more than 200 lines, split it into smaller sequential steps and pause for review between them.
 - Keep each step narrowly scoped; avoid bundling unrelated refactors or features.
 
 ### Learning Focus

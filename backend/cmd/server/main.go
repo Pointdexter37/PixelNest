@@ -25,6 +25,7 @@ func main() {
 	wallpaperRepository := repositories.NewMemoryWallpaperRepository()
 	wallpaperService := services.NewWallpaperService(wallpaperRepository)
 	wallpaperHandler := handlers.NewWallpaperHandler(wallpaperService)
+	categoryHandler := handlers.NewCategoryHandler(repositories.NewMemoryCategoryRepository())
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -36,6 +37,7 @@ func main() {
 		_ = json.NewEncoder(w).Encode(healthResponse{Status: "ok"})
 	})
 	mux.HandleFunc("GET /api/v1/wallpapers", wallpaperHandler.List)
+	mux.HandleFunc("GET /api/v1/categories", categoryHandler.List)
 	mux.HandleFunc("GET /api/v1/wallpapers/{id}", wallpaperHandler.GetByID)
 	mux.HandleFunc("GET /api/v1/wallpapers/{id}/download", wallpaperHandler.Download)
 
