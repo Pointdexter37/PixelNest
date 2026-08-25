@@ -76,6 +76,10 @@ func newRepositories() (
 	if err != nil {
 		return nil, nil, func() {}, err
 	}
+	if err := database.ApplyMigration(ctx, db, "migrations/001_initial_schema.sql"); err != nil {
+		db.Close()
+		return nil, nil, func() {}, err
+	}
 	log.Println("using PostgreSQL repositories")
 	return repositories.NewPostgresWallpaperRepository(db),
 		repositories.NewPostgresCategoryRepository(db),

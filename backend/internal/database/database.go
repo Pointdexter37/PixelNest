@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -29,4 +30,16 @@ func Open(ctx context.Context, databaseURL string) (*sql.DB, error) {
 		return nil, fmt.Errorf("ping database: %w", err)
 	}
 	return db, nil
+}
+
+// ApplyMigration creates the MVP schema during local startup.
+func ApplyMigration(ctx context.Context, db *sql.DB, path string) error {
+	migration, err := os.ReadFile(path)
+	if err != nil {
+		return fmt.Errorf("read migration: %w", err)
+	}
+	if _, err := db.ExecContext(ctx, string(migration)); err != nil {
+		return fmt.Errorf("apply migration: %w", err)
+	}
+	return nil
 }

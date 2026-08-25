@@ -1,17 +1,17 @@
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     slug TEXT NOT NULL UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE tags (
+CREATE TABLE IF NOT EXISTS tags (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     slug TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE wallpapers (
+CREATE TABLE IF NOT EXISTS wallpapers (
     id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
@@ -28,13 +28,12 @@ CREATE TABLE wallpapers (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE wallpaper_tags (
+CREATE TABLE IF NOT EXISTS wallpaper_tags (
     wallpaper_id BIGINT NOT NULL REFERENCES wallpapers(id) ON DELETE CASCADE,
     tag_id BIGINT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (wallpaper_id, tag_id)
 );
 
-CREATE INDEX wallpapers_category_id_idx ON wallpapers(category_id);
-CREATE INDEX wallpapers_created_at_idx ON wallpapers(created_at DESC);
-CREATE INDEX wallpaper_tags_tag_id_idx ON wallpaper_tags(tag_id);
-
+CREATE INDEX IF NOT EXISTS wallpapers_category_id_idx ON wallpapers(category_id);
+CREATE INDEX IF NOT EXISTS wallpapers_created_at_idx ON wallpapers(created_at DESC);
+CREATE INDEX IF NOT EXISTS wallpaper_tags_tag_id_idx ON wallpaper_tags(tag_id);
