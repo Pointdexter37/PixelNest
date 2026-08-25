@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/pixelnest/backend/internal/database"
 	"github.com/pixelnest/backend/internal/handlers"
 	"github.com/pixelnest/backend/internal/repositories"
 	"github.com/pixelnest/backend/internal/services"
@@ -22,7 +25,11 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	wallpaperRepository := repositories.NewMemoryWallpaperRepository()
+	wallpaperRepository, closeDatabase, err := newWallpaperRepository()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer closeDatabase()
 	wallpaperService := services.NewWallpaperService(wallpaperRepository)
 	wallpaperHandler := handlers.NewWallpaperHandler(wallpaperService)
 	categoryHandler := handlers.NewCategoryHandler(repositories.NewMemoryCategoryRepository())
@@ -48,4 +55,21 @@ func main() {
 
 	log.Printf("PixelNest API listening on :%s", port)
 	log.Fatal(server.ListenAndServe())
+}
+
+func newWallpaperRepository() (repositories.WallpaperRepository, func(), error) {
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Println("DATABASE_URL is not set; using in-memory wallpaper data")
+		return repositories.NewMemoryWallpaperRepository(), func() {}, nil
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	db, err := database.Open(ctx, databaseURL)
+	if err != nil {
+		return nil, func() {}, err
+	}
+	log.Println("using PostgreSQL wallpaper repository")
+	return repositories.NewPostgresWallpaperRepository(db), func() { db.Close() }, nil
 }
